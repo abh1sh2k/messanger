@@ -60,8 +60,6 @@ case class Pingresp(header: Header) extends Packet
 
 case class Disconnect(header: Header) extends Packet
 
-case class Sending(data:ByteString)
-
 object Header {
   implicit val codec = (bool :: uint2 :: bool).as[Header]
 }

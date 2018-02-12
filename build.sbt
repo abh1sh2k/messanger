@@ -18,6 +18,24 @@ libraryDependencies ++= Seq(
   "com.livestream" %% "scredis" % "2.0.6",
   "com.thenewmotion" %% "akka-rabbitmq" % "3.0.0",
   "org.scodec" %% "scodec-core" % "1.7.1",
-  "org.scodec" %% "scodec-bits" % "1.0.9"
+  "org.scodec" %% "scodec-bits" % "1.0.9")
+
+
+dockerfile in docker := {
+  val artifact: File = assembly.value
+  val artifactTargetPath = s"/app/${artifact.name}"
+  new Dockerfile {
+    from("openjdk:alpine")
+    add(artifact, artifactTargetPath)
+    entryPoint("java", "-jar", artifactTargetPath)
+  }
+}
+imageNames in docker := Seq(
+  // Sets the latest tag
+  ImageName(s"${organization.value}/${name.value}:latest".toLowerCase),
+
+  // Sets a name with a tag that contains the project version
+  ImageName(s"${organization.value}/${name.value}:v${version.value.toLowerCase}".toLowerCase)
 )
+
 mainClass in (Compile,run) := Some("com.abhishek.tcp.TcpServer")

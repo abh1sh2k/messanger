@@ -27,7 +27,7 @@ class TcpManager extends Actor with ActorLogging {
 
   // bind to the listen port; the port will automatically be closed once this actor dies
   override def preStart(): Unit = {
-    IO(Tcp) ! Bind(self, new InetSocketAddress("localhost", 1883))
+    IO(Tcp) ! Bind(self, new InetSocketAddress("0.0.0.0", 1883))
   }
 
   // do not restart
