@@ -9,6 +9,6 @@ RUN \
   sbt sbtVersion
 
 WORKDIR /app
-ADD . /app
+ADD target/scala-2.11/messanger-assembly-1.0.jar /app
 EXPOSE 1883
-CMD sbt run
+CMD java -jar messanger-assembly-1.0.jar
