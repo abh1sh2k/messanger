@@ -1,25 +1,11 @@
-package com.abhishek.tcp
+package com.abhishek.mqtt
 
 import java.net.InetSocketAddress
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props, Terminated}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.io.Tcp
 import akka.util.ByteString
-import java.lang.String
-import java.nio.charset.Charset
-
-import akka.actor.{Actor, ActorLogging, ActorRef}
-import akka.io.Tcp.{PeerClosed, Received}
-import akka.util.ByteString
-import scodec.Attempt.Failure
-import scodec.codecs.Discriminated
-import net.sigusr.mqtt.impl.frames.RemainingLengthCodec
-import scodec.Codec
-import scodec.bits._
-import scodec.codecs._
-import shapeless._
 import com.abhishek.common.{Connect => MqttConnect, _}
-import com.abhishek.mqtt.{ MqttEnvelope, MqttEventBus, PacketsHelper}
 import scodec.Attempt.Failure
 import scodec.bits.BitVector
 
@@ -56,7 +42,7 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
     case MqttEnvelope(_,payload) =>
       if(payload.isInstanceOf[Packet])
         send(payload.asInstanceOf[Packet])
-    case p :Packet =>
+    case p :Packet => //this packet coming from event bus
       send(p)
     case PeerClosed     ⇒ {
       println("closed messages");

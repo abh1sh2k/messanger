@@ -1,19 +1,16 @@
-package com.abhishek.tcp
+package com.abhishek.mqtt
 
 import java.net.InetSocketAddress
 
-import scala.concurrent.duration.DurationInt
-import akka.actor.{Actor, ActorDSL, ActorLogging, ActorRef, ActorSystem, Props, SupervisorStrategy}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, SupervisorStrategy}
 import akka.io.{IO, Tcp}
 import com.typesafe.config.ConfigFactory
 
-import scala.io.StdIn
-
-object TcpServer extends App{
-  val config = ConfigFactory.parseString("akka.loglevel = DEBUG")
-
-  implicit val system = ActorSystem("TcpServer", config)
-  system.actorOf(Props(classOf[TcpManager]), "tcp")
+object TcpServer {
+  def startServer(implicit system: ActorSystem) = {
+    val config = ConfigFactory.parseString("akka.loglevel = DEBUG")
+    system.actorOf(Props(classOf[TcpManager]), "tcp")
+  }
 
 }
 
