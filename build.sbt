@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "com.zaxxer" % "HikariCP" % "2.7.2",
   "org.mariadb.jdbc" % "mariadb-java-client" % "1.1.7",
   "com.livestream" %% "scredis" % "2.0.6",
-  "com.thenewmotion" %% "akka-rabbitmq" % "3.0.0",
+  "com.rabbitmq" % "amqp-client" % "5.1.2",
   "org.scodec" %% "scodec-core" % "1.7.1",
   "org.scodec" %% "scodec-bits" % "1.0.9")
 

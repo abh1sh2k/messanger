@@ -43,6 +43,7 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
       if(payload.isInstanceOf[Packet])
         send(payload.asInstanceOf[Packet])
     case p :Packet => //this packet coming from event bus
+      println("packet from event bus")
       send(p)
     case PeerClosed     ⇒ {
       println("closed messages");

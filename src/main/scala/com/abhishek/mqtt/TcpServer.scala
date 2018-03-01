@@ -6,7 +6,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Supervisor
 import akka.io.{IO, Tcp}
 import com.typesafe.config.ConfigFactory
 
-object TcpServer {
+object MqttServer {
   def startServer(implicit system: ActorSystem) = {
     val config = ConfigFactory.parseString("akka.loglevel = DEBUG")
     system.actorOf(Props(classOf[TcpManager]), "tcp")
