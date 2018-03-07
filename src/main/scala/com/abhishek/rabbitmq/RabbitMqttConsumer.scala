@@ -9,17 +9,16 @@ import com.rabbitmq.client._
   * Created by abhishek on 22/02/18
   */
 object RabbitMqttConsumer  {
-  def init = {
-
-  }
-    val connection: Connection = RabbitMqConnectionFactory.getConnection
-    val channel: Channel = connection.createChannel()
-    val exchangeName = RabbitMqConnectionFactory.getExchangeName
-    channel.exchangeDeclare(exchangeName, BuiltinExchangeType.DIRECT)
-    val queueName = channel.queueDeclare().getQueue();
-    println("[*] Waiting for messages. To exit press CTRL+C")
-    channel.queueBind(queueName, exchangeName, RabbitMqConnectionFactory.getThisServerID)
-    channel.basicConsume(queueName, true, new RabbitMqttConsumer(channel))
+    def init (conn: Connection)= {
+      val connection = conn
+      val channel: Channel = connection.createChannel()
+      val exchangeName = RabbitMqConnectionFactory.getExchangeName
+      channel.exchangeDeclare(exchangeName, BuiltinExchangeType.DIRECT)
+      val queueName = channel.queueDeclare().getQueue();
+      println("[*] Waiting for messages. To exit press CTRL+C")
+      channel.queueBind(queueName, exchangeName, RabbitMqConnectionFactory.getThisServerID)
+      channel.basicConsume(queueName, true, new RabbitMqttConsumer(channel))
+    }
 }
 class RabbitMqttConsumer(channel:Channel) extends DefaultConsumer(channel:Channel){
   @Override override def handleDelivery(consumerTag: String, envelope: Envelope, properties: AMQP.BasicProperties, body: Array[Byte]): Unit = {

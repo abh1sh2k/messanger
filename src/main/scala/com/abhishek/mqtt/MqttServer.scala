@@ -6,6 +6,8 @@ import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Supervisor
 import akka.io.{IO, Tcp}
 import com.typesafe.config.ConfigFactory
 
+import scala.concurrent.ExecutionContext
+
 object MqttServer {
   def startServer(implicit system: ActorSystem) = {
     val config = ConfigFactory.parseString("akka.loglevel = DEBUG")
@@ -44,8 +46,5 @@ class TcpManager extends Actor with ActorLogging {
       val handler: ActorRef = context.actorOf(Props(classOf[TcpConnectionHandler], sender(), remote))
       sender() ! Register(handler, keepOpenOnPeerClosed = true)
 
-
   }
-
-
 }

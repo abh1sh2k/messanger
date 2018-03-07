@@ -8,11 +8,12 @@ import com.rabbitmq.client._;
   * Created by abhishek on 21/02/18
   */
 object RabbitMqConnectionFactory {
-  private val uuid =  UUID.randomUUID().toString()
+  private val uuid =  "server1"
   private val EXCHANGE_NAME = "mqtt-exchange"
 
   private lazy val factory = new ConnectionFactory
-  def getConnection = factory.newConnection
+  val connection = factory.newConnection()
+  def getConnection = connection
   def getExchangeName = EXCHANGE_NAME
   def getThisServerID = uuid
 }

@@ -6,6 +6,7 @@ import com.rabbitmq.client._
 /**
   * Created by abhishek on 22/02/18
   */
+case class RabbitMqttMessage(topic:String , payload:String)
 object RabbitMqttPublisher {
 
   val connection = RabbitMqConnectionFactory.getConnection
