@@ -21,4 +21,4 @@ libraryDependencies ++= Seq(
   "org.scodec" %% "scodec-bits" % "1.0.9")
 
 
-mainClass in assembly := Some("com.abhishek.tcp.TcpServer")
+mainClass in assembly := Some("com.abhishek.main.Boot")
