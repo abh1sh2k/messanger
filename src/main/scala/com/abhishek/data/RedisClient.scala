@@ -13,7 +13,7 @@ trait RedisClient{
   def pushMessages(from: String, to : String, messages : List[String] ): Future[Boolean]
 }
 object RedisClient {
-  private lazy val redis = new Redis
+  private lazy val redis = new Redis()
   private lazy val rediscl = new RedisClientImpl
   def getRedis() = redis
   def getRedisClient() = rediscl

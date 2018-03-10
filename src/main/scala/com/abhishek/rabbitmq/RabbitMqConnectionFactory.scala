@@ -13,7 +13,9 @@ object RabbitMqConnectionFactory {
 
   private lazy val factory = new ConnectionFactory
   val connection = factory.newConnection()
+
   def getConnection = connection
+
   def getExchangeName = EXCHANGE_NAME
   def getThisServerID = uuid
 }
