@@ -12,8 +12,20 @@ object RabbitMqConnectionFactory {
   private val EXCHANGE_NAME = "mqtt-exchange"
 
   private lazy val factory = new ConnectionFactory
+  val host = System.getenv("RabbitMqHost")
+
+  var firstTime = 1
+
+  if(firstTime == 1){
+    Thread.sleep(20000)
+    firstTime = 2;
+  }
+  println("~~~~~~~~~~~~~~~ host "+host)
+  factory.setHost(host)
   val connection = factory.newConnection()
+
   def getConnection = connection
+
   def getExchangeName = EXCHANGE_NAME
   def getThisServerID = uuid
 }

@@ -80,6 +80,7 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
                 context become connected
 
               }
+            case s : Subscribe => {}
             case _ => log.warning("wrong packet")
           }
         }
@@ -100,7 +101,6 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
   def handlePacket(p : Packet ): Unit = {
     p match {
       case MqttConnect(header, connect_flags, client_id, topic, message, user, password) =>
-        println("still getting connected messages")
         if (! eventBus.clientOnThisServer(client_id))
           die
       case Subscribe(header, messageIdentifier, topics) =>
