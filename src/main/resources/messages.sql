@@ -1,0 +1,1 @@
+create table messages(message varchar(100), userid varchar(100), message_identifier int);
