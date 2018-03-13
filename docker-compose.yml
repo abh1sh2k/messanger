@@ -1,19 +1,50 @@
 version: "3"
 services:
-  web:
-    # replace username/repo:tag with your name and image details
-    image: abhishekkumargaya/messanger:latest
-    deploy:
-      replicas: 5
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 50M
-      restart_policy:
-        condition: on-failure
+  mqtt:
+    container_name: mqtt
+    build:
+       context: .
     ports:
       - "1883:1883"
-    networks:
-      - webnet
-networks:
-  webnet:
+    environment:
+      - "RabbitMqHost=rabbit"
+    links:
+      - rabbit
+      - redis
+      - dbmysql
+    depends_on:
+     - rabbit
+     - redis
+     - dbmysql
+
+  rabbit:
+      image: rabbitmq:3.7.2-management
+      hostname: rabbit
+      container_name: rabbit-server
+      ports:
+        - "15672:15672"
+        - "5671:5671"
+        - "15671:15671"
+        - "5672:5672"
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+
+  dbmysql:
+    image: mysql
+    container_name: mysql-server
+    hostname: mysqlhost
+    command: mysqld --user=root --verbose
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "user_messages"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+volumes:
+  redis-data:

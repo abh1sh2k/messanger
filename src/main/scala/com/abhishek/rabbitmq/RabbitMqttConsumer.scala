@@ -15,7 +15,6 @@ object RabbitMqttConsumer  {
       val exchangeName = RabbitMqConnectionFactory.getExchangeName
       channel.exchangeDeclare(exchangeName, BuiltinExchangeType.DIRECT)
       val queueName = channel.queueDeclare().getQueue();
-      println("[*] Waiting for messages. To exit press CTRL+C")
       channel.queueBind(queueName, exchangeName, RabbitMqConnectionFactory.getThisServerID)
       channel.basicConsume(queueName, true, new RabbitMqttConsumer(channel))
     }
