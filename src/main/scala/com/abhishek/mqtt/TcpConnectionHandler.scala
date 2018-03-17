@@ -80,6 +80,7 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
                 context become connected
 
               }
+            case s : Subscribe => {}
             case _ => log.warning("wrong packet")
           }
         }

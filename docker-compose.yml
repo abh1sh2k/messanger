@@ -1,5 +1,6 @@
 version: "3"
 services:
+<<<<<<< HEAD
   web:
     # replace username/repo:tag with your name and image details
     image: abhishekkumargaya/messanger
@@ -33,10 +34,51 @@ services:
     container_name: database.dev
     command: mysqld --user=root --verbose
 
+=======
+  mqtt:
+    container_name: mqtt
+    build:
+       context: .
+    ports:
+      - "1883:1883"
+    environment:
+      - "RabbitMqHost=rabbit"
+    links:
+      - rabbit
+      - redis
+      - dbmysql
+    depends_on:
+     - rabbit
+     - redis
+     - dbmysql
+
+  rabbit:
+      image: rabbitmq:3.7.2-management
+      hostname: rabbit
+      container_name: rabbit-server
+      ports:
+        - "15672:15672"
+        - "5671:5671"
+        - "15671:15671"
+        - "5672:5672"
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+
+  dbmysql:
+    image: mysql
+    container_name: mysql-server
+    hostname: mysqlhost
+    command: mysqld --user=root --verbose
+>>>>>>> 977f727... adding docker compose
     ports:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: "user_messages"
+<<<<<<< HEAD
       MYSQL_USER: "test"
       MYSQL_PASSWORD: "root"
       MYSQL_ROOT_PASSWORD: "root"
@@ -44,5 +86,11 @@ services:
 
 networks:
   webnet:
+=======
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+>>>>>>> 977f727... adding docker compose
 volumes:
   redis-data:

@@ -11,4 +11,4 @@ RUN \
 WORKDIR /app
 ADD target/scala-2.11/messanger-assembly-1.0.jar /app
 EXPOSE 1883
-CMD java -jar messanger-assembly-1.0.jar
+CMD java -jar messanger-assembly-1.0.jar -env="

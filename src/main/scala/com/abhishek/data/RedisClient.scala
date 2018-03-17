@@ -1,7 +1,7 @@
 package com.abhishek.data
 
 import com.abhishek.rabbitmq.RabbitMqConnectionFactory
-import scredis.Redis
+import scredis.{Redis, RedisConfig}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Try}
