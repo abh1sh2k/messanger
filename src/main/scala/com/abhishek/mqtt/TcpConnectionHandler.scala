@@ -36,13 +36,8 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
     case Received(data) => {
       val b = PacketsHelper.decode(BitVector(data))
       b.foreach {
-        case Left(p: Packet) => {
-          log.debug("recieved packet " + p)
-          handlePacket(p)
-        }
-        case Right(p: Failure) => {
-          log.warning("failure " + p)
-        }
+        case Left(p: Packet) => handlePacketAfterConnected(p)
+        case Right(p: Failure) => log.warning("failure " + p)
       }
     }
     case MqttEnvelope(_,payload) =>
@@ -55,7 +50,8 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
       println("closed messages");
       die
     }
-
+    case Connected => { log.warning("getting connected packed even after connected"); die }
+    case x :Any => { log.warning("unexpected message received ",x)}
   }
 
   def receive = {
@@ -72,15 +68,14 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
                 uid = Some(c.client_id)
                 redisClient.registerClientOnThisServer(c.client_id)
                 send (Connack (Header (false, 0, false), 0) )
-                for {
-                  messages <- userDataService.getOfflineMessage(c.client_id)
-                } {
-                  messages.map(message => send(Publish(c.header, c.client_id, 1, message.message)))
+                userDataService.getOfflineMessage(c.client_id).map{
+                  _.map(message => send(Publish(c.header, c.client_id, 1, message.message)))
                 }
                 context become connected
-
               }
-            case s : Subscribe => {}
+            case Subscribe(header, messageIdentifier, topics) =>
+              if(uid.isDefined) topics.foreach{ topic => eventBus.subscribe(self, topic._1) }
+              else die
             case _ => log.warning("wrong packet")
           }
         }
@@ -98,7 +93,8 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
     connection ! Write(envelope)
   }
 
-  def handlePacket(p : Packet ): Unit = {
+  def handlePacketAfterConnected(p : Packet ): Unit = {
+    log.info("handle packet " + p)
     p match {
       case MqttConnect(header, connect_flags, client_id, topic, message, user, password) =>
         if (! eventBus.clientOnThisServer(client_id))
@@ -141,6 +137,7 @@ class TcpConnectionHandler(connection: ActorRef, remote: InetSocketAddress)
   def die() = {
     uid match {
       case Some(topic) =>
+        uid = None
         eventBus.unsubscribe(self,topic)
         redisClient.unregisterClient(topic)
       case _ => eventBus unsubscribe self
