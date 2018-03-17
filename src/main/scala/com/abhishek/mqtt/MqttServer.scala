@@ -42,7 +42,7 @@ class TcpManager extends Actor with ActorLogging {
 
     //#echo-manager
     case Connected(remote, local) ⇒
-      log.info("received connection from {}", remote)
+      log.debug("received connection from {}", remote)
       val handler: ActorRef = context.actorOf(Props(classOf[TcpConnectionHandler], sender(), remote))
       sender() ! Register(handler, keepOpenOnPeerClosed = true)
 

@@ -10,5 +10,6 @@ RUN \
 
 WORKDIR /app
 ADD target/scala-2.11/messanger-assembly-1.0.jar /app
+ADD src/main/resources/docker.conf /app
 EXPOSE 1883
-CMD java -jar messanger-assembly-1.0.jar -env="
+CMD java -Dconfig.file=docker.conf -jar messanger-assembly-1.0.jar

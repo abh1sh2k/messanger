@@ -19,12 +19,18 @@ class UserDataServiceImpl extends UserDataService with DBSupport {
     val q = Query("select * from user where msidn =  ? ", List[String](msidn))
     implicit val conn = getConnection()
     val stmt = getStatement(q)
+    var rs : ResultSet = null
     try {
-      getStatement(q).executeQuery().next()
+      rs = stmt.executeQuery()
+      val r = rs.next()
+      rs.close()
+      r
     }
     catch {
       case e : Exception => println("Ex ",e.getMessage)
+        rs.close()
         false
+
     }
     finally {
       stmt.close()
@@ -63,7 +69,7 @@ class UserDataServiceImpl extends UserDataService with DBSupport {
         stmt.executeUpdate()
       }
       catch {
-        case e : Exception => println("Ex ",e.getMessage)
+        case e : Exception => println("Query",q," Ex ",e.getMessage)
           -1
       }
       finally {
@@ -78,7 +84,6 @@ class UserDataServiceImpl extends UserDataService with DBSupport {
     val q = Query("select * from messages where userid = ?; delete from messages where userid = ? " , Seq(clientId ,clientId))
     implicit val conn = getConnection()
     val stmt = getStatement(q)
-    var rsList = List.empty[ResultSet]
     Future {
       try {
         val rs = stmt.executeQuery()
@@ -88,7 +93,6 @@ class UserDataServiceImpl extends UserDataService with DBSupport {
         case e : Exception => println("Ex ",e.getMessage); List.empty[UserMessages]
       }
       finally {
-        rsList.map(_.close())
         stmt.close()
         conn.close()
       }
